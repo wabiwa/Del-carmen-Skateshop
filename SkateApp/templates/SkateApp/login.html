@@ -1,0 +1,47 @@
+{% extends 'SkateApp/base.html' %}
+
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <h3 class="text-center mb-4 titulo-detalle">¡Subete a la tabla!</h3>
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow">
+            <div class="card-body p-4" style="background-color: rgba(226, 178, 216, 0.055);">
+                <h3 class="text-center mb-2 titulo-filtros">Iniciar Sesion</h3>
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-dange lead-total text-center">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label descripcion-producto-2">Nombre de usuario</label>
+                        <input type="text" name="username" class="form-control" id="username" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label descripcion-producto-2">Contraseña</label>
+                        <input type="password" name="password" class="form-control" id="password" required>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">Ingresar</button>
+                    </div>
+                </form>
+                
+                <hr class="mt-4">
+                <p class="text-center descripcion-producto-2">
+                    ¿No tienes cuenta? <a href="{% url 'SkateApp:registro' %}" class="fw-bold text-decoration-none" style="color: rgba(167, 86, 149, 0.795);">Regístrate aquí</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

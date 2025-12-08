@@ -1,0 +1,205 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const starContainer = document.querySelector('.star-rating');
+        const djangoField = starContainer.querySelector('[name="calificacion"]'); // Asume que este es el nombre de tu campo
+
+        if (starContainer && djangoField) {
+            starContainer.addEventListener('change', function(event) {
+                if (event.target.type === 'radio') {
+                    // Actualiza el campo de Django con el valor del radio button
+                    djangoField.value = event.target.value;
+                }
+            });
+            
+            // Inicializar el valor de la estrella si ya hay una calificación
+            if (djangoField.value) {
+                 const initialValue = djangoField.value;
+                 const radioToSelect = starContainer.querySelector(`#star${initialValue}`);
+                 if (radioToSelect) {
+                     radioToSelect.checked = true;
+                 }
+            }
+        }
+    });
+</script>
+
+{% extends "SkateApp/base.html" %}
+{% load static %}
+{% load humanize %} {% block title %}{{ producto.nombre }} | SkateShop{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <a href="{% url 'SkateApp:catalogo' %}" class="btn btn-outline-dark mb-4">
+        &larr; Volver al catalogo
+    </a>
+
+    <div class="row mb-5">
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm">
+                {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" 
+                         class="imagen-detalle" 
+                         alt="{{ producto.nombre }}"
+                         style="width: 100%; object-fit: cover;">
+                {% else %}
+                    <img src="https://placehold.co/600x400/5D0089/FFC300?text={{ producto.nombre }}" 
+                         class="imagen-detalle" 
+                         alt="{{ producto.nombre }}">
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            
+            {% if user.is_staff %}
+                <div class="alert alert-warning d-flex justify-content-between align-items-center mb-3 py-2">
+                    <small><span>Modo Admin</span></small>
+                    <div>
+                        <a href="{% url 'SkateApp:editar_producto' producto_id=producto.id %}" class="btn btn-sm btn-dark me-2">
+                            Editar
+                        </a>
+                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+
+            <h1 class="titulo-detalle">{{ producto.nombre }}</h1>
+            
+            <p class="lead text-muted">
+                Categoria: 
+                <a href="{% url 'SkateApp:productos_por_categoria' categoria_slug=producto.categorias.first.slug %}" class="text-secondary" style="text-decoration: none;">
+                    {{ producto.categorias.first.nombre }}
+                </a>
+            </p>
+
+            <h2 class="text-success mb-4" style="font-family: 'santacarla_blackregular', sans-serif;">${{ producto.precio|floatformat:0|intcomma }} CLP</h2>
+
+            <div class="mb-3">
+                {% if promedio_calificacion %}
+                    <span class="text-warning fs-5">
+                        <i class="fas fa-star"></i> {{ promedio_calificacion|floatformat:1 }} / 5
+                    </span>
+                    <span class="text-muted small">({{ reseñas.count }} opiniones)</span>
+                {% else %}
+                    <span class="text-muted small">Sin calificaciones aún.</span>
+                {% endif %}
+            </div>
+
+            <div class="mb-4 ">
+                <h5 class="descripcion-producto">Descripcion:</h5>
+                <p class="descripcion-producto-2">{{ producto.descripcion }}</p>
+            </div>
+
+            <div class="d-grid gap-2">
+                <a href="{% url 'SkateApp:gestionar_carrito' producto.id %}" class="btn btn-success btn-lg">
+                    Anadir al Carrito 🛒
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row mt-5">
+        <div class="col-md-8 mx-auto">
+            <h3 class="mb-4 text-center titulo-opinion">Opiniones de Clientes</h3>
+
+            <div class="card mb-5 card-reseña-entrada border-0 shadow-sm">
+                <div class="card-body">
+                    {% if user.is_authenticated %}
+                        <h5 class="card-title">¿Compraste este producto? ¡Cuéntanos!</h5>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label fw-bold">Puntuación:</label>
+                                    <div class="star-rating">
+                                        {{ form.calificacion }}
+                                        <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 estrellas"></label>
+                                        <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 estrellas"></label>
+                                        <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 estrellas"></label>
+                                        <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 estrellas"></label>
+                                        <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 estrellas"></label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-9 mb-3">
+                                    <label class="form-label fw-bold">Tu Opinión:</label>
+                                    {{ form.texto }}
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-dark">Publicar Reseña</button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="text-center">
+                            <p class="mb-2 text-muted">Debes iniciar sesión para dejar una opinión.</p>
+                            <a href="{% url 'SkateApp:iniciar_sesion' %}" class="btn btn-outline-dark btn-sm">Ir al Login</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if reseñas %}
+                {% for resena in reseñas %}
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle text-white d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px; background-color: rgba(135, 57, 117);">
+                                        <span class="fw-bold">{{ resena.usuario.username|slice:":1"|upper }}</span>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0">{{ resena.usuario.username }}</h6>
+                                        <small class="text-muted">{{ resena.fecha|naturaltime }}</small>
+                                    </div>
+                                </div>
+                                <div class="text-warning">
+                                    {% if resena.calificacion == 5 %} ⭐⭐⭐⭐⭐
+                                    {% elif resena.calificacion == 4 %} ⭐⭐⭐⭐
+                                    {% elif resena.calificacion == 3 %} ⭐⭐⭐
+                                    {% elif resena.calificacion == 2 %} ⭐⭐
+                                    {% else %} ⭐
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <p class="card-text p-3 rounded" style="border: 1px solid #eee; background-color: #f9f9f9;">{{ resena.texto }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-4 text-muted">
+                    <i class="far fa-comment-dots fa-3x mb-3"></i>
+                    <p>Aún no hay opiniones para este producto.</p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas eliminar el producto "{{ producto.nombre }}"? Esta acción no se puede deshacer.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <form action="{% url 'SkateApp:eliminar_producto' producto_id=producto.id %}" method="POST" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar Producto</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

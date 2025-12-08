@@ -1,0 +1,180 @@
+{% extends "SkateApp/base.html" %}
+{% load humanize %} 
+
+{% block title %}Comunidad | Del Carmen Skateshop{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4 text-center titulo-catalogo">🛹 Muro de la Comunidad</h1>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0 bg-light sticky-top" style="top: 20px; z-index: 1;">
+                <div class="card-body">
+                    <h5 class="card-title mb-3 titulo-filtros">Crear Publicacion</h5>
+                    
+                    {% if user.is_authenticated %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ form.titulo.label_tag }}
+                                {{ form.titulo }}
+                                {% if form.titulo.errors %}
+                                    <div class="text-danger small mt-1">{{ form.titulo.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.contenido.label_tag }}
+                                {{ form.contenido }}
+                                {% if form.contenido.errors %}
+                                    <div class="text-danger small mt-1">{{ form.contenido.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success w-100">Publicar</button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-info text-center border-0" style="background-color: #f7f3f3;">
+                            <p class="mb-2">¿Quieres participar?</p>
+                            <a href="{% url 'SkateApp:iniciar_sesion' %}" class="btn btn-outline-dark w-100">Inicia Sesion</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h3 class="mb-3 border-bottom pb-2 titulo-filtros">Publicaciones Recientes</h3>
+            
+            {% if posts %}
+                {% for post in posts %}
+                    <div class="card mb-4 shadow-sm h100">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom-0" style="position: relative;">
+                            {% if user.is_superuser %}
+                            <button type="button" 
+                                    class="btn btn-danger btn-sm p-1" 
+                                    title="Eliminar Publicación (Solo Admin)"
+                                    style="position: absolute; top: 10px; right: 10px; z-index: 10;"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#confirmDeleteModal" 
+                                    data-post-id="{{ post.id }}" 
+                                    data-post-titulo="{{ post.titulo }}">
+                                <i class="fas fa-trash-alt fa-sm"></i>
+                            </button>
+                            {% endif %}
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle text-white d-flex justify-content-center align-items-center me-2" style="width: 40px; height: 40px; background-color: rgba(135, 57, 117);">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <strong class="text-dark">{{ post.usuario.username }}</strong>
+                                    <br>
+                                    <small class="text-muted" style="font-size: 0.8rem;">{{ post.fecha|naturaltime }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0">
+                            <h5 class="card-title titulo-producto" style="color: rgb(250, 208, 72)!important; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.733);">{{ post.titulo }}</h5>
+                            <p class="card-text fs-5 descripcion-producto-2">{{ post.contenido }}</p>
+                        </div>
+
+                        <div class="card-footer bg-light border-top-0">
+                            
+                            {% if post.comentarios.all %}
+                            <div class="mb-3 pt-2 border-top">
+                                <h6 class="text-muted small mb-2 titulo-filtros">Comentarios:</h6>
+                                {% for comentario in post.comentarios.all %}
+                                    <div class="d-flex mb-2 align-items-start">
+                                        <div class="me-2 fw-bold small text-dark text-nowrap descripcion-producto-2">
+                                            {{ comentario.usuario.username }}:
+                                        </div>
+                                        <div class="bg-white px-2 py-1 rounded small flex-grow-1 border descripcion-producto-2" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.103);">
+                                            {{ comentario.texto }}
+                                            <span class="d-block text-end text-muted" style="font-size: 0.65rem;">
+                                                {{ comentario.fecha|naturaltime }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            {% if user.is_authenticated %}
+                            <form action="{% url 'SkateApp:agregar_comentario' post.id %}" method="POST" class="d-flex gap-2 mt-2">
+                                {% csrf_token %}
+                                <div class="flex-grow-1">
+                                    {{ comentario_form.texto }}
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm" title="Enviar respuesta">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                            {% else %}
+                            <small class="text-muted d-block mt-2">
+                                <a href="{% url 'SkateApp:iniciar_sesion' %}" class="text-decoration-none descripcion-producto-2">Inicia sesión</a> para responder.
+                            </small>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5 text-muted bg-light rounded shadow-sm">
+                    <h4 class="titulo-filtros">📭 El muro esta vacio</h4>
+                    <p class="descripcion-producto-2">¡Sé el primero en escribir algo sobre skate!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación de Publicación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas eliminar la publicación titulada"<span id="modal-post-titulo" class="fw-bold"></span>"?
+        <p class="mt-2 text-danger">Se eliminará el post y sus comentarios de forma permanente.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <form id="deletePostForm" method="POST" action="" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar Post</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    // Obtener la referencia al modal
+    var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+    
+    // Escuchar el evento que se dispara JUSTO antes de que el modal se muestre
+    confirmDeleteModal.addEventListener('show.bs.modal', function (event) {
+        // Botón que disparó el modal
+        var button = event.relatedTarget;
+        
+        // Extraer la información del post de los atributos data-* del botón
+        var postId = button.getAttribute('data-post-id');
+        var postTitulo = button.getAttribute('data-post-titulo');
+        
+        // 1. Actualizar el título del post en el cuerpo del modal
+        var modalPostTitulo = confirmDeleteModal.querySelector('#modal-post-titulo');
+        modalPostTitulo.textContent = postTitulo;
+
+        // 2. Construir la URL de eliminación (usando la URL definida en urls.py)
+        // Ejemplo: /post/123/eliminar/
+        // Asegúrate de que el formato coincida con tu definición de URL:
+        var deleteUrl = `/post/${postId}/eliminar/`; 
+        
+        // 3. Actualizar la acción del formulario dentro del modal
+        var deleteForm = confirmDeleteModal.querySelector('#deletePostForm');
+        deleteForm.action = deleteUrl;
+    });
+</script>
+{% endblock %}

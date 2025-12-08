@@ -1,0 +1,54 @@
+{% extends 'SkateApp/base.html' %}
+
+{% block title %}Mi Dirección{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <h4 class="mb-4 text-center titulo-detalle" style="white-space: nowrap;">📍 Gestionar Direccion de Envio</h4>
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body p-4" style="background-color: rgba(226, 178, 216, 0.178);">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        {% if messages %}
+                            <div class="alert alert-info">
+                                {% for message in messages %}
+                                    {{ message }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="region" class="form-label fw-bold descripcion-producto-2">Región</label>
+                            <input type="text" name="region" id="region" class="form-control" 
+                                   value="{{ direccion_actual.region|default:'' }}" required 
+                                   placeholder="Ej: Metropolitana">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="comuna" class="form-label fw-bold descripcion-producto-2">Comuna</label>
+                            <input type="text" name="comuna" id="comuna" class="form-control" 
+                                   value="{{ direccion_actual.comuna|default:'' }}" required
+                                   placeholder="Ej: Providencia">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="calle" class="form-label fw-bold descripcion-producto-2">Calle y Número</label>
+                            <input type="text" name="calle" id="calle" class="form-control" 
+                                   value="{{ direccion_actual.calle|default:'' }}" required
+                                   placeholder="Ej: Av. Siempreviva 742">
+                        </div>
+
+                        <div class="d-grid gap-3 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">Guardar Direccion</button>
+                            <a href="{% url 'SkateApp:panel_usuario' %}" class="btn btn-outline-dark">Volver al Panel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

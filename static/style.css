@@ -1,0 +1,443 @@
+@font-face {
+    font-family: 'santacarla_blackregular';
+    src: url('fonts/santacalra_black-webfont.woff2') format('woff2'),
+         url('fonts/santacalra_black-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'santacarlaregular';
+    src: url('fonts/santacarla-webfont.woff2') format('woff2'),
+         url('fonts/santacarla-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body {
+    background-color: #FFFFFF;
+    color: rgba(75, 12, 59);
+}
+
+.navbar, .bg-dark, footer{
+    background-color:rgba(75, 12, 59)!important;
+}
+
+.custom-alert {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+
+    background: rgba(75, 12, 59, 0.253);
+    color: #fff;
+    border: 2px solid rgba(255, 196, 0, 0.7); 
+    border-radius: 12px;
+
+    padding: 30px 25px;
+    max-width: 400px;
+    text-align: center;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+
+    animation: mostrar-popup 0.4s ease-out;
+}
+
+@keyframes mostrar-popup {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.custom-alert .btn-close {
+    position: absolute;
+    top: 0px;
+    padding-bottom: 5px;
+    right: 8px;
+    filter: brightness(200%);
+}
+
+.custom-alert .btn-close {
+    filter: brightness(200%);
+}
+
+
+.banner-inicio{
+    background-size: cover;
+    background-position: center;
+    height: 673px;
+}
+
+.banner-text-shadow {
+    text-shadow: 4px 4px 6px rgba(75, 12, 59);
+    white-space: nowrap;
+    color: rgba(255, 196, 0, 0.774);
+    font-family: 'santacarla_blackregular', sans-serif;
+    font-size: 150px;
+}
+
+.logo-navbar{
+    text-shadow: 2px 2px 4px rgba(167, 86, 149, 0.795);
+    white-space: nowrap;
+    color: rgba(255, 196, 0, 0.774);
+    font-family: 'santacarla_blackregular', sans-serif;
+    letter-spacing: 2px;
+    font-size: 35px;
+}
+
+.logo{
+    height: 120px;
+    width: auto;
+}
+
+.footer-base{
+    font-size: 20px; 
+    text-shadow: 2px 2px 4px rgba(167, 86, 149, 0.795);
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+.titulos{
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    white-space: nowrap;
+    overflow: hidden;
+    color: rgba(255, 196, 0, 0.774);
+    font-family: 'santacarla_blackregular', sans-serif;
+    font-size: 100px;
+}
+
+.titulo-producto{
+    text-shadow: 2px 2px 4px rgba(167, 86, 149, 0.795);
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 25px;
+    color: rgba(167, 86, 149, 0.795);
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+.descripcion-producto{
+    text-shadow: 2px 2px 4px rgba(167, 86, 149, 0.795);
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+.descripcion-producto-2{
+    color: rgba(167, 86, 149, 0.795);
+}
+
+.titulo-opinion{
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 50px;
+    color: rgba(255, 196, 0, 0.774);
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+.card-reseña-entrada {
+    border-top: 3px solid rgba(255, 197, 0, 1);
+    background-color: #fcfcfc;
+}
+
+.categoria-destacada{
+    padding-top: 100px;
+}
+
+.categoria-superpuesta{
+    width: 350px;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    margin: 0 auto;
+    perspective: 1000px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    z-index: 0;
+}
+
+.categoria-superpuesta img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 1;
+}
+
+.titulo-superpuesto{
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 1rem;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    font-family:'santacarla_blackregular', sans-serif ;
+    letter-spacing: 10px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    z-index: 2;
+    transition: transform 0.3s ease-in-out;
+}
+
+.descripcion-superpuesta{
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-inline:20px;
+    margin-bottom: 10px;
+    color: white;
+    font-size: 15px;
+    text-align: center;
+    font-family:'santacarla_blackregular', sans-serif ;
+    letter-spacing: 2px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    z-index: 2;
+    transition: transform 0.3s ease-in-out;
+}
+
+.categoria-superpuesta:hover{
+    transform: scale(1.05) translateZ(50px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.titulo-filtros{
+    text-shadow: 2px 2px 4px rgba(167, 86, 149, 0.795);
+    white-space: nowrap;
+    overflow: hidden;
+    letter-spacing: 1px;
+    color: rgba(167, 86, 149, 0.795);
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+.boton-buscar{
+    white-space: nowrap;
+    overflow: hidden;
+    letter-spacing: 1px;
+    font-size: 15px;
+    color: rgba(167, 86, 149, 0.795);
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+.titulo-catalogo{
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: center;
+    color: rgba(255, 196, 0, 0.774);
+    font-family: 'santacarla_blackregular', sans-serif;
+    font-size: 75px;
+}
+
+.titulo-carrito{
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    white-space: nowrap;
+    overflow: hidden;
+    color: rgba(255, 196, 0, 0.774);
+    font-family: 'santacarla_blackregular', sans-serif;
+    font-size: 50px;
+}
+
+.list-group-item-action.active{
+    background-color: rgba(167, 86, 149, 0.795)!important;
+    color: #FFFFFF!important;
+    border-color: rgba(135, 57, 117) !important;
+}
+
+.list-group-item-action:hover {
+    background-color: rgba(135, 57, 117, 0.1);
+    color: rgba(75, 12, 59);
+}
+
+.imagen-detalle{
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.titulo-detalle{
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    color: rgba(255, 196, 0, 0.774);
+    font-family: 'santacarla_blackregular', sans-serif;
+    font-size: 50px;
+}
+
+.lead{
+    color: rgba(167, 86, 149, 0.795)!important;
+    font-family: 'santacarla_blackregular', sans-serif;
+    font-size: 22px;
+}
+
+.lead-total{
+    color: rgba(167, 86, 149, 0.445)!important;
+    font-family: 'santacarla_blackregular', sans-serif;
+    font-size: 22px;
+}
+
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    transition: all 0.25s ease-in-out;
+}
+
+.btn-primary {
+    background-color: rgba(167, 86, 149, 0.795);
+    color: rgba(75, 12, 59);
+    font-size: 18px;
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+.btn-primary:hover {
+    background-color: rgba(216, 61, 182, 0.473);
+    color: rgba(75, 12, 59);
+}
+
+.btn-success {
+    background-color: rgba(167, 86, 149, 0.795);
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    font-size: 18px;
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+.btn-success-pago {
+    background-color: rgba(255, 196, 0, 0.568);
+    color: rgba(75, 12, 59);
+    text-shadow: none;
+    font-size: 18px;
+    font-family: 'santacarla_blackregular', sans-serif;
+    border: 1px solid rgba(75, 12, 59, 0.3);
+}
+
+.btn-success-pago:hover {
+    background-color: rgba(255, 196, 0, 1);
+    color: rgba(75, 12, 59);
+}
+
+.btn-success:hover {
+    background-color: rgb(216, 61, 182, 0.473);
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+.btn-outline-dark {
+    text-shadow: 2px 2px 4px rgb(216, 61, 182, 0.473);
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+.btn-outline-dark:hover {
+    background-color: rgba(240, 215, 234, 0.836);
+    color: black;
+    text-shadow: 2px 2px 4px rgba(75, 12, 59);
+    font-family: 'santacarla_blackregular', sans-serif;
+}
+
+/* Star rating */
+
+.star-rating input[type="number"],
+.star-rating select{
+    display: none !important;
+}
+
+.star-rating {
+    border: none;
+    float: left;
+    direction: rtl;
+}
+
+.star-rating > input {
+    display: none;
+}
+
+.star-rating > label:before {
+    content: '\2605';
+    color: #ccc;
+    font-size: 1.5rem;
+    padding: 0 2px;
+    cursor: pointer;
+}
+
+.star-rating > input:checked ~ label:before,
+.star-rating > label:hover ~ label:before,
+.star-rating > input:hover:before {
+    color: rgba(255, 197, 0, 1);
+}
+
+.star-rating > input:checked ~ label:before {
+    color: rgba(255, 197, 0, 1);
+}
+
+.titulos,
+.titulo-catalogo,
+.titulo-carrito,
+.titulo-detalle,
+.titulo-opinion {
+    white-space: normal !important;
+    overflow: visible !important;
+    word-break: break-word;
+}
+
+@media (max-width: 992px) {
+    .banner-text-shadow{
+        white-space: normal !important;
+        overflow: visible !important;
+        word-break: break-word;
+        font-size: 65px;
+    }
+
+    .titulos{
+        font-size: 50px;
+        padding-bottom: 20px;
+    }
+
+    .titulo-detalle,
+    .titulo-carrito,
+    .titulo-opinion{
+        font-size: 40px;
+    }
+
+    .titulo-catalogo{
+        font-size: 55px;
+    }
+
+    .banner-inicio{
+        height: 500px;
+    }
+
+    .banner-inicio a.btn{
+        position: static!important;
+        display: block;
+        margin-left: auto!important;
+        margin-right: auto!important;
+        font-size: 16px;
+        padding: 0.75rem 0.5rem;
+    }
+
+    .banner-botones-movil{
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+}
+

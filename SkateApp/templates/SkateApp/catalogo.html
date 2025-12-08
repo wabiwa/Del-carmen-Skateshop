@@ -1,0 +1,101 @@
+{% extends "SkateApp/base.html" %}
+{% load static %}
+{% load humanize %}
+${{ producto.precio|floatformat:0|intcomma }} CLP
+ {% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-3">
+        <h2 class="titulo-filtros">Filtros</h2>
+        <hr>
+        
+        <form method="GET" action="{% url 'SkateApp:catalogo' %}" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control boton-buscar" 
+                       placeholder="Buscar productos..." value="{{ query|default_if_none:'' }}">
+                <button class="btn btn-dark boton-buscar" type="submit">Buscar</button>
+            </div>
+        </form>
+
+        <h5 class="titulo-filtros">Categorias</h5>
+        <ul class="list-group">
+            <a href="{% url 'SkateApp:catalogo' %}" 
+               class="titulo-filtros list-group-item list-group-item-action {% if not categoria_actual %}active{% endif %}">
+                Todas las categorias
+            </a>
+            
+            {% for cat in categorias %}
+                {% with cat_slug=cat.nombre|slugify %} 
+                
+                <a href="{% url 'SkateApp:productos_por_categoria' categoria_slug=cat_slug %}"
+                   class="titulo-filtros list-group-item list-group-item-action {% if categoria_actual.id == cat.id %}active{% endif %}">
+                    {{ cat.nombre }}
+                </a>
+                {% endwith %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="col-md-9">
+        <h1 class="mb-4 titulo-catalogo">
+            {% if categoria_actual %}
+                Catalogo: {{ categoria_actual.nombre }}
+            {% elif query %}
+                Resultados para "{{ query }}"
+            {% else %}
+                Catalogo Completo
+            {% endif %}
+        </h1>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            
+            {% if productos %}
+                {% for producto in productos %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            
+                            {% if producto.imagen %}
+                                <img src="{{ producto.imagen.url }}" 
+                                     class="card-img-top" 
+                                     alt="Imagen de {{ producto.nombre }}"
+                                     style="height: 300px; object-fit: cover;">
+                            {% else %}
+                                <img src="https://placehold.co/400x300/5D0089/FFC300?text={{ producto.nombre }}" 
+                                     class="card-img-top" 
+                                     alt="Imagen de {{ producto.nombre }}">
+                            {% endif %}
+
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title titulo-producto">{{ producto.nombre }}</h5>
+                                
+                                <p class="card-text small text-muted">
+                                    {% if producto.avg_calificacion %}
+                                        ⭐ {{ producto.avg_calificacion|floatformat:1 }} ({{ producto.reseñas.count }} reseñas)
+                                    {% else %}
+                                        Sin calificaciones
+                                    {% endif %}
+                                </p>
+
+                                <p class="h4 mt-auto mb-3 descripcion-producto">${{ producto.precio|floatformat:0|intcomma }} CLP</p> 
+                                
+                                <a href="{% url 'SkateApp:gestionar_carrito' producto.id %}" class="btn btn-success w-100 mb-2">
+                                    🛒 Comprar
+                                </a>
+
+                                <a href="{% url 'SkateApp:detalle_producto' producto_id=producto.id %}" class="btn btn-outline-dark w-100">
+                                    Ver Detalles
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center w-100 descripcion-producto">No se encontraron productos disponibles con esos criterios.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

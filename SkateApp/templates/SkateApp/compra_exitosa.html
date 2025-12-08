@@ -1,0 +1,30 @@
+{% extends "SkateApp/base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <h1 class="titulo-catalogo">🎉 ¡Compra Exitosa!</h1>
+        <p class="lead" style="color: rgba(75, 12, 59) !important; letter-spacing: 2px;">
+        Tu pedido ha sido procesado correctamente y el stock ha sido actualizado.
+        </p>
+        <p class="lead" style="color: rgba(112, 22, 90, 0.719) !important; letter-spacing: 2px;">Gracias por comprar en Del Carmen Skateshop!</p>
+
+        <div class="card shadow-lg mt-5" style="border-top: 5px solid rgba(255, 196, 0, 0.774);">
+            <div class="card-body">
+                <h4 class="card-title lead" style="color: rgba(167, 86, 149, 0.795) !important;">Detalles de tu Pedido</h4>
+                <p class="h1 mb-4" style="color: rgba(75, 12, 59);">#{{ pedido.id }}</p>
+                <p class="mb-1"><strong>Fecha de Pedido:</strong> {{ pedido.fecha|date:"d M, Y H:i" }}</p>
+                <p class="mb-1"><strong>Estado Actual:</strong> <span class="badge" style="background-color: rgba(167, 86, 149, 0.795) !important; color: white;">{{ pedido.estado|upper }}</span></p>
+                <p class="h4 mt-3" style="color: rgba(75, 12, 59);"><strong>Total Pagado:</strong> ${{ pedido.total|floatformat:0 }} CLP</p>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'SkateApp:home' %}" class="btn btn-primary btn-lg me-2">Volver a la Tienda</a>
+            <a href="#" class="btn btn-outline-dark">Ver Seguimiento de Pedido</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'SkateApp/base.html' %}
+
+{% block content %}
+<div class="container mt-5 mb-5 text-center">
+    <h2 class="titulo-detalle mb-4">Redirigiendo a Webpay Seguro...</h2>
+    <p class="lead" style="color: rgba(75, 12, 59);">Estás a un paso de completar tu compra por ${{ total }}</p>
+    
+    <div class="spinner-border text-primary my-4" style="color: rgba(75, 12, 59);" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+
+    <div class="alert mt-4 mx-auto lead-total" style="max-width: 500px; color: rgba(75, 12, 59)!important;">
+        Si la página no carga, presiona el botón de abajo.
+    </div>
+
+    <form action="{{ url }}" method="POST" id="webpay-form" class="mt-4">
+        <input type="hidden" name="token_ws" value="{{ token }}" />
+        <button type="submit" class="btn btn-lg btn-success-pago">
+            Haz clic aquí si no eres redirigido automáticamente
+        </button>
+    </form>
+
+    <script>
+        window.onload = function(){
+            document.getElementById('webpay-form').submit();
+        }
+    </script>
+</div>
+{% endblock %}

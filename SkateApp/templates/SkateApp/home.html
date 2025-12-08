@@ -1,0 +1,107 @@
+{% extends "SkateApp/base.html" %}
+
+{% block title %}Del Carmen Skateshop{% endblock %}
+
+{% load static %}
+
+{% block banner %}
+
+    <div class="position-relative banner-inicio">
+        <img src="{% static 'images/skater.png' %}" class="w-100 h-100 object-fit-cover img-fluid" alt="Skater Banner" style="opacity: 0.7;">
+
+        <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+            <h1 class="display-1 fw-semibold mb-4 banner-text-shadow"> VIVE DEL CARMEN</h1>
+        </div>
+
+        <div class="d-md-block">
+            <a href="{% url 'SkateApp:catalogo' %}" class="btn btn-success btn-lg position-absolute bottom-0 start-0 m-4">
+            Ve nuestro catalogo completo
+            </a>
+            <a href="{% url 'SkateApp:comunidad' %}" class="btn btn-success btn-lg position-absolute bottom-0 end-0 m-4">
+                Se parte de la comunidad
+            </a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block content %}
+
+    <section class="container my-5">
+        <h1 class="display-1 fw-semibold mb-4 titulos categoria-destacada text-center">Categorias  Destacadas</h1>
+        <div class="row g-4 justify-content-center py-5">
+            {% for cat in categorias_destacadas_front %}
+
+            <div class="col-lg-4 col-md-6">
+                <a href="{% url 'SkateApp:productos_por_categoria' categoria_slug=cat.slug%}" class="categoria-superpuesta d-block shadow-lg">
+                    {% if cat.imagen_url %}
+                        <img src="{{ cat.imagen_url }}" class="img-fluid" alt="Imagen de {{ cat.nombre }}">
+                    {% else %}
+                        <img src="{% static 'images/skater.png' %}" class="img-fluid" alt="Imagen de por defecto de {{ cat.nombre }}">
+                    {% endif %}
+                    <h3 class="titulo-superpuesto">{{ cat.nombre }}</h3>
+                    <span class="descripcion-superpuesta">Explora lo mejor en {{ cat.nombre }}</span>
+                </a>
+            </div>
+            {% endfor %}
+
+            <div class="col-lg-4 col-md-6">
+                <a href="{% url 'SkateApp:comunidad' %}" class="categoria-superpuesta d-block shadow-lg">
+                    <img src="{% static 'images/Comunidad.png' %}" class="img-fluid">
+                    <h3 class="titulo-superpuesto">Comunidad</h3>
+                    <span class="descripcion-superpuesta">Conecta con nosotros</span>
+                </a>
+            </div>
+            
+            {% if categorias_destacadas_front|length < 2 %}
+            <div class="col-lg-4 col-md-6">
+                <a href="{% url 'SkateApp:catalogo' %}" class="categoria-superpuesta d-block shadow-lg">
+                    <img src="{% static 'images/catalogo.png' %}" class="img-fluid">
+                    <h3 class="titulo-superpuesto">Catalogo</h3>
+                    <span class="descripcion-superpuesta">Revisa nuestro productos</span>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    {% if posts_destacados %}
+    <section class="container my-5">
+        <h1 class="display-1 fw-semibold mb-4 titulos categoria-destacada text-center">Ultimas Novedades</h1>
+        
+        <div class="row g-4 justify-content-center py-5">
+            {% for post in posts_destacados %}
+
+            <div class="col-lg-6 col-md-10">
+                <a href="{% url 'SkateApp:comunidad' %}" class="card d-block h-100 shadow-lg text-decoration-none boroder-0" style="background-color: rgba(226, 178, 216, 0.178);">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle text-white d-flex justify-content-center align-items-center me-3 flex-shrink-0" style="width: 45px; height: 45px; background-color: rgba(75, 12, 59);">
+                                    <i class="fas fa-user fa-lg"></i>
+                                </div>
+                                <div>
+                                    <strong class="text-dark descripcion-producto-2">{{ post.usuario.username }}</strong>
+                                    <br>
+                                    <small class="text-muted lead-total" style="font-size: 0.8rem;">{{ post.fecha|date:"d/m/Y H:i" }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 class="card-title titulo-filtros mb-2" style="color: rgba(75, 12, 59)!important;"> {{ post.titulo|truncatechars:70 }} </h5>
+                        <p class="card-text descripcion-producto-2 text-dark opacity-75"> {{ post.contenido|truncatechars:180 }} </p>
+
+                        <div class="mt-3 text-end">
+                            <span class="badge" style="background-color: rgba(75, 12, 59); color: white;">
+                                Leer más en Comunidad
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+
+{% endblock %}

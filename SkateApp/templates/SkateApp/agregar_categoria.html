@@ -1,0 +1,40 @@
+{% extends 'SkateApp/base.html' %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center" style="margin-top: 50px;">
+        <h2 class="titulo-detalle text-center mb-4">Agregar Categoria</h2>
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header" style="background-color: rgba(75, 12, 59); border-bottom: 3px solid rgba(255, 196, 0, 0.774);">
+                    <h4 class="mb-0 titulo-filtros" style="text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.212);">Agregar nueva Categoria</h4>
+                </div>
+                
+                <div class="card-body p-4" style="background-color: rgba(226, 178, 216, 0.095);">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold descripcion-producto-2">Nombre de la Categoría</label>
+                            {{ form.nombre }}
+                            {% if form.nombre.errors %}
+                                <div class="text-danger small mt-1">{{ form.nombre.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary shadow-sm">
+                                <i class="bi bi-check-circle-fill me-2"></i>Guardar Categoria
+                            </button>
+
+                            <a href="{% url 'SkateApp:home' %}" class="btn btn-outline-dark border-0">
+                                <i class="bi bi-arrow-left me-1"></i>Cancelar y Volver
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
