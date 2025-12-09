@@ -382,16 +382,6 @@ body {
     color: rgba(255, 197, 0, 1);
 }
 
-.titulos,
-.titulo-catalogo,
-.titulo-carrito,
-.titulo-detalle,
-.titulo-opinion {
-    white-space: normal !important;
-    overflow: visible !important;
-    word-break: break-word;
-}
-
 .admin-card {
     transform: scale(1);
     transition: transform 0.25s ease-out;
@@ -435,23 +425,62 @@ body {
     padding-bottom: 100px;
 }
 
+.titulos,
+.titulo-catalogo,
+.titulo-carrito,
+.titulo-detalle,
+.titulo-opinion {
+    white-space: normal !important;
+    overflow: visible !important;
+    word-break: break-word;
+}
+
 @media (max-width: 992px) {
     .banner-text-shadow{
         white-space: normal !important;
         overflow: visible !important;
         word-break: break-word;
-        font-size: 65px;
+        font-size: 55px;
     }
 
     .titulos{
-        font-size: 50px;
+        font-size: 40px;
         padding-bottom: 20px;
+    }
+    .titulo-catalogo{
+        padding-top: 20px;
+        padding-bottom: 50px;
+    }
+
+    .imagen-detalle {
+        height: 400px;
     }
 
     .titulo-detalle,
     .titulo-carrito,
-    .titulo-opinion{
-        font-size: 40px;
+    .titulo-opinion,
+    .admin-title{
+        font-size: 30px;
+    }
+
+    .logo {
+        height: 60px;
+    }
+    
+    .logo-navbar {
+        font-size: 20px;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    .navbar-nav .nav-item .nav-link {
+        margin-left: 0 !important; 
+        margin-top: 5px; 
+    }
+
+    .navbar-brand.mx-auto {
+        margin-left: auto !important;
+        margin-right: auto !important;
     }
 
     .titulo-catalogo{
