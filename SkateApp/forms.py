@@ -22,6 +22,7 @@ class CustomUserCreationForm(UserCreationForm):
         return user
 
 class CustomUserChangeForm(UserChangeForm):
+    password = None
     class Meta:
         model = Usuario
         fields = ('first_name', 'last_name', 'email')
@@ -183,12 +184,16 @@ class CategoriaForm(forms.ModelForm):
             'nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre de la categoría'}),
         }
     def clean_nombre(self):
-        nombre = self.cleaned_data.get('nombre')
-        if not nombre.strip():
+        nombre = self.cleaned_data.get('nombre', '')
+        nombre = nombre.strip()
+        if not nombre:
             raise ValidationError("El nombre de la categoría no puede estar vacío.")
-            
-        if not self.instance.pk:
-            if Categoria.objects.filter(nombre__iexact=nombre).exists():
-                raise ValidationError("Esta categoría ya existe.")
-        
-        return nombre.strip()
+
+        qs = Categoria.objects.filter(nombre__iexact=nombre)
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+
+        if qs.exists():
+            raise ValidationError("Esta categoría ya existe.")
+
+        return nombre

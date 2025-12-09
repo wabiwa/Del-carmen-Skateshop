@@ -72,15 +72,11 @@
                         
                         {% if user.is_superuser %}
                         <li class="nav-item border-start ms-2 ps-2">
-                            <a class="nav-link btn btn-sm text-warning fw-bold btn-outline-dark" href="{% url 'SkateApp:agregar_categoria' %}">
-                                Nueva Categoria
+                            <a class="nav-link btn btn-sm text-warning fw-bold btn-outline-dark" href="{% url 'SkateApp:gestion_administrador' %}">
+                                Gestionar Tienda
                             </a>
                         </li>
-                        <li class="nav-item ms-2 ps-2">
-                            <a class="nav-link btn btn-sm text-warning fw-bold btn-outline-dark" href="{% url 'SkateApp:agregar_producto' %}">
-                                Nuevo Producto
-                            </a>
-                        </li>
+
                         {% endif %}
                     </ul>
                     

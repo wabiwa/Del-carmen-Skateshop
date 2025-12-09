@@ -1,17 +1,15 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const starContainer = document.querySelector('.star-rating');
-        const djangoField = starContainer.querySelector('[name="calificacion"]'); // Asume que este es el nombre de tu campo
+        const djangoField = starContainer.querySelector('[name="calificacion"]');
 
         if (starContainer && djangoField) {
             starContainer.addEventListener('change', function(event) {
                 if (event.target.type === 'radio') {
-                    // Actualiza el campo de Django con el valor del radio button
                     djangoField.value = event.target.value;
                 }
             });
             
-            // Inicializar el valor de la estrella si ya hay una calificación
             if (djangoField.value) {
                  const initialValue = djangoField.value;
                  const radioToSelect = starContainer.querySelector(`#star${initialValue}`);

@@ -38,12 +38,20 @@ urlpatterns = [
     path('comunidad/comentar/<int:post_id>/', views.agregar_comentario, name='agregar_comentario'),
 
     # --- ZONA DE ADMINISTRACIÓN ---
-    path('administracion/agregar-producto/', views.agregar_producto, name='agregar_producto'),
+    path('administracion/gestion', views.gestion_administrador, name="gestion_administrador"),
     path('administracion/agregar-categoria/', views.agregar_categoria, name='agregar_categoria'),
+    path('administracion/gestionar-categorias/', views.gestionar_categorias, name='gestionar_categorias'),
+    path('administracion/gestionar-categorias/editar/<int:categoria_id>/', views.editar_categoria, name="editar_categoria"),
+    path('administracion/gestionar-categorias/eliminar/<int:categoria_id>/', views.eliminar_categoria, name="eliminar_categoria"),
+    path('administracion/agregar-producto/', views.agregar_producto, name='agregar_producto'),
+    path('administracion/gestionar-procuctos/', views.gestionar_productos, name='gestionar_productos'),
     path('producto/<int:producto_id>/editar/', views.editar_producto, name='editar_producto'),
     path('producto/<int:producto_id>/eliminar/', views.eliminar_producto, name='eliminar_producto'),
     path('comunidad/eliminar/<int:post_id>/', views.eliminar_post, name='eliminar_post'),
-
+    path('administrador/gestionar-posts/', views.gestionar_posts, name='gestionar_posts'),
+    path("administrador/gestionar-usuarios/", views.gestionar_usuarios, name="gestionar_usuarios"),
+    path("administrador/editar-usuario/<int:user_id>/", views.editar_usuario, name="editar_usuario"),
+    path("administrador/eliminar-usuario/<int:user_id>/", views.eliminar_usuario, name="eliminar_usuario"),
 
     # --- API (Asistente) ---
     path('api/asistente/', views.asistente_ia, name='asistente_ia_api'),

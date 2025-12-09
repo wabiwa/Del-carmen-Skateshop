@@ -16,7 +16,7 @@ from transbank.common.integration_type import IntegrationType
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
 
-from .models import Categoria, Producto, Post, Comentario, Pedido, DetallePedido, Reseña, Direccion 
+from .models import Categoria, Producto, Post, Comentario, Pedido, DetallePedido, Reseña, Direccion, Usuario
 from .forms import (
     CustomUserCreationForm, CustomUserChangeForm, ProductoForm, PostForm, 
     ComentarioForm, DireccionEnvioForm, ResenaForm, CategoriaForm
@@ -467,16 +467,8 @@ def eliminar_post(request: HttpRequest, post_id: int):
 # ======================================================================
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
-def agregar_producto(request):
-    if request.method == 'POST':
-        form = ProductoForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Producto agregado exitosamente al catálogo.')
-            return redirect('SkateApp:catalogo')
-    else:
-        form = ProductoForm()
-    return render(request, 'SkateApp/agregar_producto.html', {'form': form, 'page_title': 'Agregar Producto'})
+def gestion_administrador(request):
+    return render(request, "SkateApp/gestion_administrador.html")
 
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
@@ -490,6 +482,80 @@ def agregar_categoria(request):
     else:
         form = CategoriaForm()
     return render(request, 'SkateApp/agregar_categoria.html', {'form': form, 'titulo': 'Nueva Categoría'})
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def gestionar_categorias(request):
+    query = request.GET.get('buscar')
+    categorias = Categoria.objects.all().order_by('nombre')
+
+    if query:
+        categorias = categorias.filter(
+            Q(nombre__icontains=query) | Q(slug__icontains=query)
+        ).distinct()
+    
+    data = {
+        'titulo': 'Gestionar Categorías',
+        'categorias': categorias,
+    }
+    return render(request, 'SkateApp/gestionar_categorias.html', data)
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def gestionar_productos(request):
+    buscar = request.GET.get("buscar", "")
+
+    productos = Producto.objects.all()
+
+    if buscar:
+        productos = productos.filter(
+            nombre__icontains=buscar
+        )
+
+    return render(request, "SkateApp/gestionar_productos.html", {"productos": productos,"titulo": "Gestión de Productos"})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def editar_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categoria, id=categoria_id)
+
+    if request.method == "POST":
+        form = CategoriaForm(request.POST, request.FILES, instance=categoria)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Categoría "{categoria.nombre}" actualizada correctamente.')
+            return redirect("SkateApp:gestionar_categorias")
+    else:
+        form = CategoriaForm(instance=categoria)
+
+    return render(request, "SkateApp/editar_categoria.html", {"categoria": categoria,"form": form})
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def eliminar_categoria(request, categoria_id):
+    categoria = get_object_or_404(Categoria, id=categoria_id)
+
+    if request.method == "POST":
+        nombre_categoria = categoria.nombre
+        categoria.delete()
+        messages.warning(request, f'Categoria "{nombre_categoria}" ha sido eliminado.')
+        return redirect("SkateApp:gestionar_categorias")
+
+    return render(request, "SkateApp/eliminar_categoria.html", {"categoria": categoria})
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def agregar_producto(request):
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Producto agregado exitosamente al catálogo.')
+            return redirect('SkateApp:catalogo')
+    else:
+        form = ProductoForm()
+    return render(request, 'SkateApp/agregar_producto.html', {'form': form, 'page_title': 'Agregar Producto'})
 
 @login_required
 @user_passes_test(lambda u: u.is_staff)
@@ -520,7 +586,74 @@ def eliminar_producto(request, producto_id):
     
     return redirect('SkateApp:detalle_producto', producto_id=producto.id)
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def gestionar_posts(request):
+    query = request.GET.get("buscar", "")
 
+    posts = Post.objects.all().order_by("-fecha")
+
+    if query:
+        posts = posts.filter(
+            Q(titulo__icontains=query) |
+            Q(contenido__icontains=query) |
+            Q(usuario__username__icontains=query)
+        )
+
+    return render(request, "SkateApp/gestionar_posts.html", {
+        "posts": posts,
+        "query": query
+    })
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def gestionar_usuarios(request):
+    buscar = request.GET.get("buscar", "")
+
+    usuarios = Usuario.objects.all().order_by("username")
+
+    if buscar:
+        usuarios = usuarios.filter(
+            Q(username__icontains=buscar) |
+            Q(email__icontains=buscar) |
+            Q(first_name__icontains=buscar) |
+            Q(last_name__icontains=buscar)
+        )
+
+    return render(request, "SkateApp/gestionar_usuarios.html", {
+        "usuarios": usuarios,
+        "buscar": buscar
+    })
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def editar_usuario(request, user_id):
+    usuario = get_object_or_404(Usuario, pk=user_id)
+
+    if request.method == "POST":
+        form = CustomUserChangeForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "El usuario ha sido actualizado correctamente.")
+            return redirect("SkateApp:gestion_usuarios")
+    else:
+        form = CustomUserChangeForm(instance=usuario)
+
+    return render(request, "SkateApp/editar_usuario.html", {"form": form, "usuario": usuario})
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def eliminar_usuario(request, user_id):
+    if request.method == "POST":
+        usuario = get_object_or_404(Usuario, pk=user_id)
+
+        try:
+            usuario.delete()
+            messages.success(request, f'Usuario "{usuario.username}" eliminado.')
+        except Exception as e:
+            messages.error(request, f"No se pudo eliminar: {e}")
+
+    return redirect("SkateApp:gestionar_usuarios")
 
 # ======================================================================
 # VISTA API (Asistente)

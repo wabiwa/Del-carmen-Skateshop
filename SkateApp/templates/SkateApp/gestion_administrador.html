@@ -1,0 +1,76 @@
+{% extends "SkateApp/base.html" %}
+
+{% block title %}Panel de Administración{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <h1 class="display-1 fw-semibold mb-5 titulos text-center">Administracion</h1>
+
+    <!-- Listados -->
+    <h2 class="display-1 fw-semibold titulo-detalle text-center">Gestion</h2>
+    <div class="row g-4 justify-content-center row-admin mt-2">
+
+        <div class="col-lg-3 col-md-6">
+            <a href="{% url 'SkateApp:gestionar_categorias' %}" class="admin-card d-block text-decoration-none">
+                <div class="admin-card-inner shadow-lg">
+                    <i class="fas fa-tags admin-icon"></i>
+                    <h3 class="admin-title">Gestionar Categorias</h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <a href="{% url 'SkateApp:gestionar_productos' %}" class="admin-card d-block text-decoration-none">
+                <div class="admin-card-inner shadow-lg">
+                    <i class="fas fa-boxes admin-icon"></i>
+                    <h3 class="admin-title">Gestionar Productos</h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <a href="{% url 'SkateApp:gestionar_posts' %}" class="admin-card d-block text-decoration-none">
+                <div class="admin-card-inner shadow-lg">
+                    <i class="fas fa-newspaper admin-icon"></i>
+                    <h3 class="admin-title">Gestionar Posts</h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <a href="{% url 'SkateApp:gestionar_usuarios' %}" class="admin-card d-block text-decoration-none">
+                <div class="admin-card-inner shadow-lg">
+                    <i class="fas fa-users admin-icon"></i>
+                    <h3 class="admin-title">Gestionar Usuarios</h3>
+                </div>
+            </a>
+        </div>
+
+    </div>
+    <hr>
+    <!-- Agregados -->
+    <h2 class="display-1 fw-semibold titulo-detalle text-center">Agregar</h2>
+    <div class="row g-4 justify-content-center my-4 row-admin">
+
+        <div class="col-lg-3 col-md-6">
+            <a href="{% url 'SkateApp:agregar_categoria' %}" class="admin-card d-block text-decoration-none">
+                <div class="admin-card-inner shadow-lg">
+                    <i class="fas fa-tags admin-icon"></i>
+                    <h3 class="admin-title">Agregar Categorias</h3>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <a href="{% url 'SkateApp:agregar_producto' %}" class="admin-card d-block text-decoration-none">
+                <div class="admin-card-inner shadow-lg">
+                    <i class="fas fa-boxes admin-icon"></i>
+                    <h3 class="admin-title">Agregar Productos</h3>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

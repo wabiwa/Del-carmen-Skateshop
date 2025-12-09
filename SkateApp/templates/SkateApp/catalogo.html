@@ -20,6 +20,11 @@ ${{ producto.precio|floatformat:0|intcomma }} CLP
         </form>
 
         <h5 class="titulo-filtros">Categorias</h5>
+        {% if user.is_authenticated and user.is_staff %}
+            <a href="{% url 'SkateApp:gestionar_categorias' %}" class="btn btn-dark boton-buscar w-100 mb-3">
+                <i class="fa fa-cog" aria-hidden="true"></i> Gestionar categorias
+            </a>
+        {% endif %}
         <ul class="list-group">
             <a href="{% url 'SkateApp:catalogo' %}" 
                class="titulo-filtros list-group-item list-group-item-action {% if not categoria_actual %}active{% endif %}">

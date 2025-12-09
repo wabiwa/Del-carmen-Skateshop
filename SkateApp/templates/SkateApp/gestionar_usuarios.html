@@ -1,0 +1,128 @@
+{% extends "SkateApp/base.html" %}
+
+{% block title %}Gestionar Usuarios{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <h2 class="titulo-detalle text-center">Gestion de Usuarios</h2>
+
+    <div class="card shadow-sm my-4">
+
+        <!-- ENCABEZADO -->
+        <div class="card-header"
+             style="background-color: rgba(75, 12, 59); 
+                    border-bottom: 3px solid rgba(255, 196, 0, 0.774);">
+            <h2 class="mb-0 titulo-filtros">Usuarios</h2>
+        </div>
+
+        <!-- BUSCADOR -->
+        <div class="px-4 pt-4">
+            <form method="GET" class="d-flex gap-2">
+
+                <input type="text" name="buscar"
+                       class="form-control"
+                       placeholder="Buscar usuario..."
+                       value="{{ buscar }}">
+
+                <button class="btn btn-outline-primary">
+                    <i class="fa fa-search"></i>
+                </button>
+
+                <a href="{% url 'SkateApp:gestionar_usuarios' %}"
+                   class="btn btn-outline-danger">
+                    <i class="fa fa-times"></i>
+                </a>
+            </form>
+        </div>
+
+        <!-- TABLA -->
+        <div class="table-responsive px-4 mt-4">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for u in usuarios %}
+                    <tr>
+                        <td>{{ u.username }}</td>
+                        <td>{{ u.first_name }} {{ u.last_name }}</td>
+                        <td>{{ u.email }}</td>
+                        <td>
+                            {% if u.rol == "admin" %}
+                                <span class="badge bg-warning text-dark">Admin</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Cliente</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-end">
+
+                            <a href="{% url 'SkateApp:editar_usuario' u.id %}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+
+                            <button class="btn btn-sm btn-outline-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEliminar{{ u.id }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+
+                        </td>
+                    </tr>
+
+                    <div class="modal fade" id="modalEliminar{{ u.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Eliminar Usuario</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    ¿Seguro deseas eliminar a
+                                    "<strong>{{ u.username }}</strong>"?
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                                    <form action="{% url 'SkateApp:eliminar_usuario' u.id %}"
+                                          method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-danger">Eliminar</button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                {% empty %}
+                    <tr><td colspan="5" class="text-center py-4">No hay usuarios.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="px-4 pb-4">
+            <a href="{% url 'SkateApp:gestion_administrador' %}"
+               class="btn btn-outline-dark w-100 mt-2"
+               style="background-color: rgba(230,159,214,0.384);">
+                Volver
+            </a>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
