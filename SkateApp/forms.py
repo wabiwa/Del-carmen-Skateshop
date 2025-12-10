@@ -2,6 +2,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
 from .models import Usuario, Producto, Post, Reseña, Direccion, Categoria
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import io
+import sys
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -175,6 +179,40 @@ class ProductoForm(forms.ModelForm):
         if len(nombre) < 5:
             raise ValidationError("El nombre del producto debe tener al menos 5 caracteres.")
         return nombre
+    
+    def clean_imagen(self):
+        imagen = self.cleaned_data.get("imagen")
+        if not imagen:
+            return imagen
+
+        try:
+            img = Image.open(imagen)
+            img.verify()
+        except Exception:
+            raise ValidationError(
+                "La imagen no es válida. Guarda la captura como PNG/JPG antes de subirla."
+            )
+
+        img = Image.open(imagen)
+        img = img.convert("RGB") 
+
+        extension_origen = img.format
+
+        if extension_origen not in ("JPEG", "PNG"):
+            output = io.BytesIO()
+            img.save(output, format="PNG")
+            output.seek(0)
+
+            imagen = InMemoryUploadedFile(
+                output,
+                "imagen",
+                f"{imagen.name.split('.')[0]}.png",
+                "image/png",
+                sys.getsizeof(output),
+                None,
+            )
+
+        return imagen
 
 class CategoriaForm(forms.ModelForm):
     class Meta:

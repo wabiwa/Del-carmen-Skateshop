@@ -210,42 +210,71 @@ def gestionar_direcciones(request):
 def gestionar_carrito(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     carrito = request.session.get('carrito', {})
-    
-    carrito[str(producto_id)] = {
-        'cantidad': 1, 
-        'precio': str(producto.precio), 
-        'nombre': producto.nombre
-    }
-    
+
+    producto_id_str = str(producto_id)
+
+    if producto_id_str in carrito:
+        carrito[producto_id_str]['cantidad'] += 1
+    else:
+        carrito[producto_id_str] = {
+            'cantidad': 1,
+            'precio': float(producto.precio),
+            'nombre': producto.nombre,
+            'imagen': producto.imagen.url if producto.imagen else None
+        }
+
     request.session['carrito'] = carrito
-    request.session.modified = True 
-    
+    request.session.modified = True
+
     messages.success(request, f'¡{producto.nombre} agregado al carrito!')
+    return redirect('SkateApp:ver_carrito')
+
+def actualizar_cantidad(request, producto_id):
+    if request.method == "POST":
+        carrito = request.session.get('carrito', {})
+        producto_id_str = str(producto_id)
+
+        nueva_cantidad = int(request.POST.get("cantidad", 1))
+
+        if nueva_cantidad < 1:
+            nueva_cantidad = 1
+
+        if producto_id_str in carrito:
+            carrito[producto_id_str]["cantidad"] = nueva_cantidad
+            request.session['carrito'] = carrito
+            request.session.modified = True
+
     return redirect('SkateApp:ver_carrito')
 
 def ver_carrito(request):
     carrito = request.session.get('carrito', {})
     items_carrito = []
     subtotal = 0
-    
+
     for item_id, item_data in carrito.items():
         try:
             producto = Producto.objects.get(id=int(item_id))
-            precio = float(item_data['precio'])
-            subtotal += precio
-            items_carrito.append({
-                'producto_id': item_id, 
-                'nombre': producto.nombre, 
-                'precio_unitario': precio, 
-                'cantidad': 1, 
-                'costo_item': precio
-            })
         except Producto.DoesNotExist:
-            continue 
-            
+            continue
+
+        cantidad = item_data['cantidad']
+        precio_unitario = float(item_data['precio'])
+        costo_item = precio_unitario * cantidad
+
+        subtotal += costo_item
+
+        items_carrito.append({
+            'producto_id': item_id,
+            'nombre': producto.nombre,
+            'precio_unitario': precio_unitario,
+            'cantidad': cantidad,
+            'imagen': producto.imagen.url if producto.imagen else None,
+            'costo_item': costo_item,
+        })
+
     return render(request, 'SkateApp/carrito.html', {
-        'items_carrito': items_carrito, 
-        'total_general': subtotal 
+        'items_carrito': items_carrito,
+        'total_general': subtotal
     })
 
 def eliminar_item_carrito(request, producto_id):

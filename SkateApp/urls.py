@@ -15,6 +15,7 @@ urlpatterns = [
     # --- CARRITO Y CHECKOUT ---
     path('carrito/', views.ver_carrito, name='ver_carrito'),
     path('carrito/add/<int:producto_id>/', views.gestionar_carrito, name='gestionar_carrito'),
+    path('carrito/actualizar/<int:producto_id>/', views.actualizar_cantidad, name='actualizar_cantidad'),
     path('carrito/remove/<int:producto_id>/', views.eliminar_item_carrito, name='eliminar_item_carrito'),
     path('checkout/', views.checkout, name='checkout'),
     path('compra-exitosa/<int:pedido_id>/', views.compra_exitosa, name='compra_exitosa'),
